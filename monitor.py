@@ -14,7 +14,7 @@ from datetime import datetime
 
 from playwright.async_api import async_playwright
 
-TARGET_URL = "https://www.31sumai.com/attend/X2571/"
+TARGET_URL = os.environ.get("TARGET_URL", "https://www.31sumai.com/attend/X2571/")
 CHECK_INTERVAL = 60  # 秒
 
 SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL", "")

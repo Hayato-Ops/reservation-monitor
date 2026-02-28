@@ -44,6 +44,7 @@ jobs:
       - name: Check availability and notify
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          TARGET_URL: ${{ vars.TARGET_URL }}
         run: python monitor_ci.py
 
       # 今回の通知済み状態を保存（次回に引き継ぐ）

@@ -16,7 +16,7 @@ from pathlib import Path
 
 from playwright.async_api import async_playwright
 
-TARGET_URL = "https://www.31sumai.com/attend/X2571/"
+TARGET_URL = os.environ.get("TARGET_URL", "https://www.31sumai.com/attend/X2571/")
 STATE_FILE = "state.json"
 SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL", "")
 CHECK_COUNT = 5    # 1ジョブあたりのチェック回数
