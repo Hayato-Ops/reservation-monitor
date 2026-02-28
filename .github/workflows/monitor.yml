@@ -1,0 +1,51 @@
+name: 予約枠監視
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'   # 5分おきに実行
+  workflow_dispatch:          # 手動実行も可能
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4        # 次の実行と重ならないよう4分でタイムアウト
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Playwright のブラウザをキャッシュして高速化
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-v1
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium --with-deps
+
+      # 前回の通知済み状態を復元
+      - name: Restore notification state
+        uses: actions/cache/restore@v4
+        with:
+          path: state.json
+          key: reservation-state-${{ github.run_id }}
+          restore-keys: reservation-state-
+
+      - name: Check availability and notify
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python monitor_ci.py
+
+      # 今回の通知済み状態を保存（次回に引き継ぐ）
+      - name: Save notification state
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: state.json
+          key: reservation-state-${{ github.run_id }}
