@@ -5,10 +5,14 @@ on:
     - cron: '*/5 * * * *'   # 5分おきに実行
   workflow_dispatch:          # 手動実行も可能
 
+concurrency:
+  group: reservation-monitor   # 前のジョブが終わってから次を起動（重複防止）
+  cancel-in-progress: false
+
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 4        # 次の実行と重ならないよう4分でタイムアウト
+    timeout-minutes: 10       # 起動時間 + 5回チェック（1分おき）= 約8分
 
     steps:
       - uses: actions/checkout@v4
