@@ -14,8 +14,8 @@ from datetime import datetime
 
 TARGET_URL = os.environ.get("TARGET_URL") or "https://www.31sumai.com/attend/X2571/"
 SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL", "")
-CHECK_COUNT = 360   # 6時間（1分おき）
-CHECK_INTERVAL = 60
+CHECK_COUNT = 2160  # 6時間（10秒おき）
+CHECK_INTERVAL = 10
 
 
 def bukken_cd(url: str) -> str:
